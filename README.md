@@ -1,2 +1,2 @@
 # First-Foray-Into-Modding-
-Stellaris - Mod: Advanced Player Start - Tier2
+This is where I will keep VS Code mod projects
