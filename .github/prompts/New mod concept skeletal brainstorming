@@ -1,0 +1,93 @@
+````text name=concepts_galaxy_networks__COPY_ALL.txt
+================================================================================
+FILE: docs/concepts_galaxy_networks.md
+================================================================================
+# Galaxy Concepts: Spoked Topology, Network Layers, and Hyperlane Manipulation
+
+This document captures high-level concept outlines and optional mechanics discussed for future Stellaris mod development. It is intentionally design-focused (no code) and intended to be used as an LLM context anchor to reduce drift/hallucinations.
+
+## 1) Spoked Galaxy (Base Topology)
+
+### Goal
+Generate galaxies that resemble spokes/arms/filaments with sparse hyperlane connectivity and rare cross-links (bridges).
+
+### Flavor / Fiction
+The galaxy’s subspace geography is threaded into long corridors. Empires grow along routes that feel like trade arteries and military supply lines; wars revolve around holding bridges.
+
+### Strategic Feel
+- More chokepoints, longer fronts, meaningful “route control”.
+- Expansion feels like claiming corridors rather than filling blobs.
+
+### Implementation Notes (non-binding)
+- Preferred: generation-time shaping of topology.
+- Optional: light cleanup pass to handle outliers and avoid disconnected components.
+
+### Risks / Tests
+- Risk: disconnected regions / isolated empires.
+- Risk: AI expansion becoming too constrained.
+- Tests: generate multiple galaxies per size; verify connectivity; inspect hyperlane degree distribution.
+
+## 2) Hyperlane Network Layers (Overlapping Route Networks)
+
+### Goal
+Create the feeling of multiple coexisting route networks in the same galaxy (not per-empire), where access between “layers” is limited to valuable junction systems.
+
+### Flavor / Fiction
+Normal hyperlanes coexist with a second network of subspace filaments/corridors. Junction systems become strategic objectives.
+
+### Strategic Feel
+- Enemies “on the other network” require controlling junctions or alternate access.
+- Wars become about network control, not only border adjacency.
+
+### Implementation Notes (non-binding)
+- Most practical path: base hyperlanes plus a second graph via bypass-style links (gateway/wormhole-like), with limited junctions.
+- Alternative/fallback: emulate layers via partitions and rare bridges inside one hyperlane graph.
+
+### Risks / Tests
+- Risk: too many links undermines spoke geography.
+- Risk: too few junctions makes galaxy feel locked.
+- Tests: verify cross-galaxy reachability; validate junction distribution; war-path sanity checks.
+
+## 3) Hyperlane Manipulation (Infrastructure-Driven Route Control)
+
+### Goal
+Allow deliberate, planning-focused creation/removal/modification of connections without enabling instant “combat trap” reactions.
+
+### Primary Anchor
+Starbase module/building as the control surface (territorial, time-gated, costed, readable in war).
+
+### Required/Approved Constraints
+- Distance limit: actions only allowed to targets within a configured range.
+- Target selection menu: when initiating an action, the player selects the target connection (e.g., pick a target system/neighbor from an event-driven list).
+- Not reactive cheese: actions should be slow/telegraphed and/or restricted while contested.
+
+### Optional Concepts (include in scope)
+- Per-use action cost (in addition to module construction): each create/delete/modify action can consume resources (influence, alloys, energy, unity, etc.), take time (project/situation), and have cooldowns.
+- Interdiction alternative: a wartime-friendly module effect that slows/penalizes hostile transit instead of deleting lanes (supports strategy without topology breakage).
+- Visual representation (optional): if physical “pylons” are desired, spawn them only for engineered corridors rather than at every hyperlane endpoint to avoid early-game clutter.
+
+### Kilo/Megastructure Discussion Summary
+- Per-hyperlane-endpoint kilo-structures are flavorful but likely bookkeeping-heavy and potentially performance/UI noisy.
+- System-level infrastructure (starbase module/building or a single in-system construct) is preferred; if visuals are used, keep them sparse and tied to engineered edges only.
+
+### Risks / Tests
+- High risk category: connectivity breakage, AI confusion, MP determinism.
+- Tests: prevent isolation; enforce deletion restrictions; verify pathing; verify that actions are time-gated and not instantaneous.
+
+## Open Questions (to be decided later)
+- Cost philosophy: where should the “weight” live (module vs per-use), and which resources should be emphasized?
+- Scope: allow manipulation anywhere vs only at designated junction/bridge systems?
+- Are layer junctions static (map-defined) or dynamic (buildable/engineerable)?
+
+================================================================================
+OPTIONAL: README.md ADDITION (if you want a link from the repo front page)
+================================================================================
+## Design Notes / Concept Docs
+
+- `docs/concepts_galaxy_networks.md` — outlines for:
+  - Spoked Galaxy topology
+  - Hyperlane network layers
+  - Hyperlane manipulation (starbase module + range + target menu + per-use costs)
+
+(Place this section anywhere in README.md after the existing description.)
+````
