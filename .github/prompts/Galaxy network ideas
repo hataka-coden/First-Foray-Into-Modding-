@@ -1,0 +1,184 @@
+````text name=concepts_galaxy_networks__FULL_REPLACEMENT__COPY_ALL.txt
+================================================================================
+FILE: docs/concepts_galaxy_networks.md   (FULL TEXT REPLACEMENT)
+================================================================================
+# Galaxy Concepts: Spoked Topology, Network Layers, and Hyperlane Manipulation
+
+This document captures high-level concept outlines and optional mechanics discussed for future Stellaris mod development. It is intentionally design-focused (no code) and intended to be used as an LLM context anchor to reduce drift/hallucinations.
+
+It also includes a small amount of **process guidance** (LLM workflow + constraints) to keep future brainstorming sessions grounded and consistent.
+
+---
+
+## 0) Grounding Rules (Anti-Hallucination / Anti-Drift)
+
+### Purpose
+These rules exist to keep LLM-assisted brainstorming and scripting constrained, reproducible, and anchored to repository truth.
+
+### “Visibility vs Reality” (important clarification)
+- “Only visible to me” is primarily a **knowledge/intel/UI** concept (who has explored/knows endpoints), not a separate physical hyperlane graph per empire.
+- Galaxy topology changes (true hyperlane edits) should be treated as **global geography**.
+- If we need “overlapping networks,” the most practical approach is typically:
+  - **Hyperlanes** as the base shared network, plus
+  - a second network represented by **bypass-style links** (gateway/wormhole-like), with limited junction points.
+
+### Don’t invent repo facts
+- Do not invent file paths, templates, or existing helpers. If something is not known, ask for the file tree or the specific file contents.
+- Treat the repo’s existing documentation style as authoritative once identified.
+
+---
+
+## 0.1) LLM Workflow Skeleton (Process Concept)
+
+### Core model (3 layers)
+1) **Immutable reference facts**
+   - Curated repository map, canonical templates, naming rules, and “source-of-truth” paths.
+2) **Working design notes**
+   - Scratchpad brainstorming and drafts; allowed to be messy.
+3) **Generation contracts**
+   - Hard constraints for file creation/editing (headers, naming, safe edit zones, “ask when uncertain”).
+
+### Recommended documentation set (future files; not required yet)
+- `docs/00_PROJECT_CHARTER.md` — what this repo is, “what good looks like,” supported versions.
+- `docs/01_REPO_MAP.md` — curated tree, purpose of folders, authoritative templates.
+- `docs/02_STYLE_GUIDE.md` — comment/header style, naming, ordering.
+- `docs/03_STELLARIS_MODDING_CONVENTIONS.md` — prefixes, ID schemes, localization keys.
+- `docs/04_SAFE_EDIT_ZONES.md` — what can/can’t be changed.
+- `docs/05_WORKFLOWS.md` — common tasks (add event chain, add galaxy shape, etc.).
+- `docs/06_TESTING_CHECKLIST.md` — repeatable test plan.
+- `docs/07_GLOSSARY.md` — shared vocabulary.
+- `docs/99_SCRATCHPAD.md` — explicitly messy notes.
+
+### Prompt contract location (future-friendly)
+- Keep reusable prompt openers/contracts under: `.github/prompts/`
+- Example: conversation openers for “spoked galaxy” brainstorming, “network layers,” “manipulation,” etc.
+
+---
+
+## 1) Spoked Galaxy (Base Topology)
+
+### Goal
+Generate galaxies that resemble spokes/arms/filaments with sparse hyperlane connectivity and rare cross-links (bridges).
+
+### Flavor / Fiction
+The galaxy’s subspace geography is threaded into long corridors. Empires grow along routes that feel like trade arteries and military supply lines; wars revolve around holding bridges.
+
+### Strategic Feel
+- More chokepoints, longer fronts, meaningful “route control”.
+- Expansion feels like claiming corridors rather than filling blobs.
+
+### Implementation Notes (non-binding)
+- Preferred: generation-time shaping of topology.
+- Optional: light cleanup pass to handle outliers and avoid disconnected components.
+
+### Interfaces (future modularity)
+- Bridge/junction candidates may be marked (flags/modifiers) so other modules can hook into them.
+- Optional: expose consistent “bridge/junction” identifiers for the layers/manipulation concepts.
+
+### Risks / Tests
+- Risk: disconnected regions / isolated empires.
+- Risk: AI expansion becoming too constrained.
+- Tests: generate multiple galaxies per size; verify connectivity; inspect hyperlane degree distribution.
+
+---
+
+## 2) Hyperlane Network Layers (Overlapping Route Networks)
+
+### Goal
+Create the feeling of multiple coexisting route networks in the same galaxy (not per-empire), where access between “layers” is limited to valuable junction systems.
+
+### Flavor / Fiction
+Normal hyperlanes coexist with a second network of subspace filaments/corridors. Junction systems become strategic objectives.
+
+### Strategic Feel
+- Enemies “on the other network” require controlling junctions or alternate access.
+- Wars become about network control, not only border adjacency.
+
+### Implementation Notes (non-binding)
+- Most practical path: base hyperlanes plus a second graph via bypass-style links (gateway/wormhole-like), with limited junctions.
+- Alternative/fallback: emulate layers via partitions and rare bridges inside one hyperlane graph.
+
+### Interfaces / Dependencies (future modularity)
+- If paired with Spoked Galaxy, place junctions preferentially at “bridge” systems.
+- Expose a shared way to identify junction systems so manipulation tools can target them.
+
+### Risks / Tests
+- Risk: too many links undermines spoke geography.
+- Risk: too few junctions makes galaxy feel locked.
+- Tests: verify cross-galaxy reachability; validate junction distribution; war-path sanity checks.
+
+---
+
+## 3) Hyperlane Manipulation (Infrastructure-Driven Route Control)
+
+### Goal
+Allow deliberate, planning-focused creation/removal/modification of connections without enabling instant “combat trap” reactions.
+
+### Primary Anchor
+Starbase module/building as the control surface (territorial, time-gated, costed, readable in war).
+
+### Required/Approved Constraints
+- Distance limit: actions only allowed to targets within a configured range.
+- Target selection menu: when initiating an action, the player selects the target connection (e.g., pick a target system/neighbor from an event-driven list).
+- Not reactive cheese: actions should be slow/telegraphed and/or restricted while contested.
+
+### Optional Concepts (include in scope)
+- Per-use action cost (in addition to module construction): each create/delete/modify action can consume resources (influence, alloys, energy, unity, etc.), take time (project/situation), and have cooldowns.
+- Interdiction alternative: a wartime-friendly module effect that slows/penalizes hostile transit instead of deleting lanes (supports strategy without topology breakage).
+- Visual representation (optional): if physical “pylons” are desired, spawn them only for engineered corridors rather than at every hyperlane endpoint to avoid early-game clutter.
+
+### Guardrails (recommended; not yet finalized)
+These are additional constraints discussed to keep manipulation strategic and avoid unfair fleet traps:
+- No instant collapse: deletion should be a long project/situation with warning time.
+- No deletion while contested: restrict deletion in systems that are occupied/contested/recently fought in, and/or when hostile fleets are present.
+- Do not isolate the map: do not allow deletions that disconnect components or leave systems with zero exits.
+- Throughput limits: one engineering action at a time per starbase; optional empire-wide caps/cooldowns.
+- Prefer wartime control via interdiction; reserve true topology edits for slow, deliberate changes.
+
+### Kilo/Megastructure Discussion Summary
+- Per-hyperlane-endpoint kilo-structures are flavorful but likely bookkeeping-heavy and potentially performance/UI noisy.
+- System-level infrastructure (starbase module/building or a single in-system construct) is preferred; if visuals are used, keep them sparse and tied to engineered edges only.
+
+### Risks / Tests
+- High risk category: connectivity breakage, AI confusion, MP determinism.
+- Tests: prevent isolation; enforce deletion restrictions; verify pathing; verify that actions are time-gated and not instantaneous.
+
+---
+
+## 4) Unifying Fiction (Optional Narrative Wrapper)
+
+This section describes a possible shared thematic framing that can unify the three concepts if they become one cohesive project:
+
+1) **Discovery / Survey**
+   - Empires locate subspace filaments and junction candidates (knowledge/intel framing).
+2) **Engineering**
+   - Empires stabilize or collapse select corridors (slow infrastructure projects).
+3) **Layered Mobility**
+   - Secondary network access is controlled via rare junctions and/or buildable infrastructure.
+
+This wrapper is optional but useful for keeping mechanics coherent across separate modules.
+
+---
+
+## 5) Packaging & Release Strategy (Optional)
+
+Potential ways to ship these ideas:
+- **Core + Addons (recommended for maintainability)**
+  - Core: Spoked Galaxy + shared identifiers/helpers
+  - Addon: Network Layers
+  - Addon: Hyperlane Manipulation
+- **Multiple standalone mods**
+  - Each concept can be separate; optional compatibility patches.
+- **Single mod with toggles**
+  - One workshop item; features enabled via game rules/decisions.
+
+---
+
+## 6) Open Questions (to be decided later)
+- Cost philosophy: where should the “weight” live (module vs per-use), and which resources should be emphasized?
+- Scope: allow manipulation anywhere vs only at designated junction/bridge systems?
+- Are layer junctions static (map-defined) or dynamic (buildable/engineerable)?
+- Intended pacing: early-game vs mid-game vs late-game access to manipulation and layers.
+- AI posture: is AI expected to use manipulation, or is it player-only with AI-safe guardrails?
+================================================================================
+````
